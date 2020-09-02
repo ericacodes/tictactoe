@@ -21,15 +21,6 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-  // handleClick(i) {
-  //   const squares = this.state.squares.slice(); // copy entire array
-  //   if (calculateWinner(squares) || squares[i]) {
-  //     return;
-  //   }
-  //   squares[i] = this.state.xIsNext ? "X" : "O";
-  //   this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
-  // }
-
   renderSquare(i) {
     return (
       <Square
@@ -42,7 +33,6 @@ class Board extends React.Component {
   render() {
     return (
       <div>
-        {/* <div className="status">{status}</div> */}
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -68,7 +58,7 @@ class Game extends React.Component {
     super(props);
     this.state = {
       // an array of objects each with a "squares" property holding an array that corresponds to the board at a given moment
-      history: [{ squares: Array(9).fill(null) }],
+      history: [{ squares: Array(9).fill(null), index: null }],
       stepNumber: 0,
       xIsNext: true,
     };
@@ -86,9 +76,11 @@ class Game extends React.Component {
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
+      // concat one array with another. Each array contains objects with a "squares" property
       history: history.concat([
         {
           squares: squares,
+          index: i,
         },
       ]),
       stepNumber: history.length,
@@ -103,13 +95,30 @@ class Game extends React.Component {
     });
   }
 
+  findLocation(index) {
+    const position = {
+      0: "(1, 1)",
+      1: "(1, 2)",
+      2: "(1, 3)",
+      3: "(2, 1)",
+      4: "(2, 2)",
+      5: "(2, 3)",
+      6: "(3, 1)",
+      7: "(3, 2)",
+      8: "(3, 3)",
+    };
+    return position[index.toString()];
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? "Go to move #" + move : "Go to game start";
+      const desc = move
+        ? "Go to move #" + move + ` @${this.findLocation(step.index)}`
+        : "Go to game start";
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>

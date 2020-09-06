@@ -118,8 +118,6 @@ class Game extends React.Component {
 
   render() {
     const history = this.state.history;
-    console.log(history);
-    // const useHistory = this.state.isChecked ? history.reverse() : history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
@@ -140,7 +138,7 @@ class Game extends React.Component {
     });
 
     let status = winner
-      ? "Winner: " + winner
+      ? "Winner: " + winner.winner
       : "Next player: " + (this.state.xIsNext ? "X" : "O");
 
     let checkboxMessage = this.state.isChecked
@@ -160,7 +158,7 @@ class Game extends React.Component {
           <FormControlLabel
             checked={this.state.isChecked}
             onChange={() => this.handleCheck()}
-            control={<Checkbox name="checked" color="black" />}
+            control={<Checkbox name="checked" color="default" />}
             label={checkboxMessage}
           />
           <ol>{this.state.isChecked ? moves.reverse() : moves}</ol>
@@ -188,7 +186,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return { winningSquares: lines[i], winner: squares[a] };
     }
   }
   return null;

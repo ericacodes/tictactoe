@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 import "./index.css";
 
 // class Square extends React.Component {
@@ -58,6 +60,7 @@ class Game extends React.Component {
       history: [{ squares: Array(9).fill(null), index: null }],
       stepNumber: 0,
       xIsNext: true,
+      isChecked: false,
     };
   }
 
@@ -107,6 +110,12 @@ class Game extends React.Component {
     return position[index.toString()];
   }
 
+  handleCheck() {
+    this.setState({
+      isChecked: !this.state.isChecked,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -128,12 +137,14 @@ class Game extends React.Component {
       );
     });
 
-    let status;
-    if (winner) {
-      status = "Winner: " + winner;
-    } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
-    }
+    let status = winner
+      ? "Winner: " + winner
+      : "Next player: " + (this.state.xIsNext ? "X" : "O");
+
+    let checkboxMessage = this.state.isChecked
+      ? "Switch to acending order"
+      : "Swith to descending order";
+
     return (
       <div className="game">
         <div className="game-board">
@@ -144,6 +155,12 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
+          <FormControlLabel
+            checked={this.state.isChecked}
+            onChange={() => this.handleCheck()}
+            control={<Checkbox name="checked" color="black" />}
+            label={checkboxMessage}
+          />
           <ol>{moves}</ol>
         </div>
       </div>

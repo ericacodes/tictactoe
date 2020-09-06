@@ -79,8 +79,7 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     // copy of the array that corresponds to the board at a specific moment
     const squares = current.squares.slice();
-    const { winningSquares, winner } = calculateWinner(squares);
-    if (winner || squares[i]) {
+    if (calculateWinner(squares).winner || squares[i]) {
       // if someone has won or if the spot is already taken
       return;
     }
@@ -147,9 +146,14 @@ class Game extends React.Component {
       );
     });
 
-    let status = winner
-      ? "Winner: " + winner
-      : "Next player: " + (this.state.xIsNext ? "X" : "O");
+    let status;
+    if (winner) {
+      status = "Winner: " + winner;
+    } else {
+      status = current.squares.includes(null)
+        ? "Next player: " + (this.state.xIsNext ? "X" : "O")
+        : "Tie";
+    }
 
     let checkboxMessage = this.state.isChecked
       ? "Switch to acending order"

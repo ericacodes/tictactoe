@@ -118,6 +118,8 @@ class Game extends React.Component {
 
   render() {
     const history = this.state.history;
+    console.log(history);
+    // const useHistory = this.state.isChecked ? history.reverse() : history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
@@ -161,7 +163,7 @@ class Game extends React.Component {
             control={<Checkbox name="checked" color="black" />}
             label={checkboxMessage}
           />
-          <ol>{moves}</ol>
+          <ol>{this.state.isChecked ? moves.reverse() : moves}</ol>
         </div>
       </div>
     );
